@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(dplyr)
 library(gganimate)
+library(scales)
 ```
 ```{r}
 Kandidat <- read_csv("Data/Folketingsvalg - Kandidat.csv")
@@ -27,6 +28,7 @@ Kandidat_long <- Kandidat %>%
 ```
 ```{r}
 vline_years <- c(1973, 1977, 1984, 1994, 2001)
+vline_labels <- c(1973, 1977, 1984, 1994, 2001)
 ```
 ```{r}
 partifarver <- c(
@@ -52,7 +54,6 @@ ggplot(Kandidat_long, aes(x = År, y = Mandater, color = Parti)) +
   geom_point() +
   theme_minimal() +
    theme_minimal()
-
 ```
 
 ```{r}
@@ -77,12 +78,14 @@ p <- ggplot(Kandidat_long, aes(x = År, y = Mandater, color = Parti)) +
   scale_color_manual(values = partifarver) +
   geom_point() +
   geom_vline(xintercept = vline_years, color = "black", linetype = "dashed", size = 0.7) +
+  scale_y_continuous(labels = scales::number_format(accuracy = 1)) +
   theme_minimal() +
-  labs(title = 'År: {frame_along}') +
+  labs(title = 'År: {round(frame_along, 0)}') +
   transition_reveal(År)
+
 ```
 ```{r}
-animate(p, fps = 30, duration = 5)
+animate(p, fps = 60, duration = 5)
 ```
 
 ```{r}
